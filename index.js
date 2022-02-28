@@ -1,7 +1,6 @@
 import { Client } from "@notionhq/client";
 import TelegramBot from "node-telegram-bot-api";
 
-// const TelegramBot = require("node-telegram-bot-api");
 const token = "5077781602:AAFgGYVA5fafUbo9zT_epNgtZFFggNs64DI";
 
 const bot = new TelegramBot(token, { polling: true });
@@ -13,7 +12,7 @@ async function addItem(text, author) {
   try {
     const response = await notion.pages.create({
       parent: {
-        database_id: "c84ecc00bd684cdc87e94944e6669279",
+        database_id: databaseId,
       },
 
       properties: {
@@ -36,6 +35,41 @@ async function addItem(text, author) {
           ],
         },
       },
+
+      children: [
+        {
+          object: "block",
+          type: "heading_2",
+          heading_2: {
+            text: [
+              {
+                type: "text",
+                text: {
+                  content: "Lacinato kale",
+                },
+              },
+            ],
+          },
+        },
+        {
+          object: "block",
+          type: "paragraph",
+          paragraph: {
+            text: [
+              {
+                type: "text",
+                text: {
+                  content:
+                    "Lacinato kale is a variety of kale with a long tradition in Italian cuisine, especially that of Tuscany. It is also known as Tuscan kale, Italian kale, dinosaur kale, kale, flat back kale, palm tree kale, or black Tuscan palm.",
+                  link: {
+                    url: "https://en.wikipedia.org/wiki/Lacinato_kale",
+                  },
+                },
+              },
+            ],
+          },
+        },
+      ],
     });
     console.log(response);
     console.log("Success! Entry added.");
@@ -52,6 +86,14 @@ bot.on("message", (msg) => {
   console.log(msg);
   // const link = getLink(msg);
 
-  addItem(msg.text, author);
-  bot.sendMessage(chatId, "Привет :)");
+  try {
+    addItem(msg.text, author);
+    bot.sendMessage(chatId, "Успешно добавил!");
+    bot.sendMessage(chatId, "🐥");
+  } catch (error) {
+    bot.sendMessage(
+      chatId,
+      "Сорри, произошла какая то ошибка: " + error.message
+    );
+  }
 });
