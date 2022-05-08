@@ -97,7 +97,7 @@ bot.on("message", (msg) => {
   const links = getLinksArr(msg);
   console.log({ links });
 
-  bot.sendMessage(chatId, "А как назвать ?");
+  // bot.sendMessage(chatId, "А как назвать ?");
 
   try {
     // addItem(msg.text, author);
