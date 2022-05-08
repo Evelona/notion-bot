@@ -1,5 +1,6 @@
 import { Client } from "@notionhq/client";
 import TelegramBot from "node-telegram-bot-api";
+import "dotenv/config";
 
 const token = "5077781602:AAFgGYVA5fafUbo9zT_epNgtZFFggNs64DI";
 
@@ -78,16 +79,28 @@ async function addItem(text, author) {
   }
 }
 
-const getLink = (msg) => msg.entities.find((ent) => "url" in ent).url;
+const getLinksArr = (msg) => {
+  const links = [];
+  msg.entities?.forEach((ent) => {
+    if (ent.type === "url") {
+      links.push(msg.text.slice(ent.offset, ent.offset + ent.length));
+    }
+  });
+  return links;
+};
 
 bot.on("message", (msg) => {
   const chatId = msg.chat.id;
   const author = `@${msg.from.username}`;
+  console.log("________NEW MESS______");
   console.log(msg);
-  // const link = getLink(msg);
+  const links = getLinksArr(msg);
+  console.log({ links });
+
+  bot.sendMessage(chatId, "А как назвать ?");
 
   try {
-    addItem(msg.text, author);
+    // addItem(msg.text, author);
     bot.sendMessage(chatId, "Успешно добавил!");
     bot.sendMessage(chatId, "🐥");
   } catch (error) {
