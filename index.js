@@ -45,6 +45,9 @@ async function addItem(text, links, date, author) {
             start: date.toISOString(),
           },
         },
+        Link: {
+          url: links[0],
+        },
       },
 
       children: [
